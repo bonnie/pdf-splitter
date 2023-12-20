@@ -94,5 +94,6 @@ while (page < last_page - 1 and page < len(pdf.pages)):
     # advance
     page = next_page
 
-print ("WARNINGS")
-print ('\n'.join(warnings))
+if len(warnings) > 0:
+    print ("WARNINGS")
+    print ('\n'.join(warnings))
