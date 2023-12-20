@@ -31,6 +31,21 @@ def get_filename(page, page_num):
     # remove cruft from beginning
     title = re.sub(r'^\d{1,3} TOC\s*', '', title)
 
+    # remove section header text 
+    headings = [
+        "Americana", 
+        "Irish Songs", 
+        "Scottish Songs", 
+        "Australian Songs", 
+        "Other Traditional Songs \(Various Origins\)", 
+        "Spiritual / Gospel",
+        "Country-Western Songs",
+        "Folk Songs",
+        "Popular Songs \(1950-Present\)",
+        "Novelty / Silly / Funny Songs",
+    ]
+    title = re.sub(r'^\s*({})\b'.format('|'.join(headings)), '', title)
+
     # from all caps to title case
     title = string.capwords(title)
 
@@ -42,6 +57,9 @@ def get_filename(page, page_num):
 
     # remove any leading / trailing whitespace
     title.strip()
+
+    # move "the" and "a" and "an" to the end
+    title = re.sub(r'^(The|A|An) \b(.*)', r'\2, \1', title)
 
     if len(title) == 0:
         warnings.append("not printing page {}: title was reduced to nothing".format(str(page_num)))
@@ -66,7 +84,6 @@ while (page < last_page - 1 and page < len(pdf.pages)):
         next_page = page + 2
     else: 
         next_page = page + 1
-
 
     if (output_filename):
         with open(output_path, 'wb') as out:
